@@ -7,7 +7,7 @@ export interface IUser extends Document {
     name: string
 }
 
-const UserSchema: Schema = new Schema({
+const userSchema: Schema = new Schema({
     name: {
         type: String,
         required: true,
@@ -31,6 +31,6 @@ const UserSchema: Schema = new Schema({
     },
 });
 
-const User: Model<IUser> = model('User', UserSchema);
+const User: Model<IUser> = model('User', userSchema);
 
 export default User;
