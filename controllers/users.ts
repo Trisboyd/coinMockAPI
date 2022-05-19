@@ -1,18 +1,16 @@
 import bcrypt from 'bcryptjs';
-import { Router, Response } from 'express';
+import { Response } from 'express';
 import request from '../types/request';
 import jwt from 'jsonwebtoken';
-import User, { IUser } from '../models/user';
+import User from '../models/user';
 import payload from '../types/payload';
 
-// errors______________________________________________________________
+// ______________________________________________________________errors
 const RequestError = require('../middleware/errors/requestError');
 const NotFoundError = require('../middleware/errors/notFoundError');
 
-// dotenv variables______________________________
+// ________________________________________dotenv variables
 const { NODE_ENV, JWT_SECRET } = process.env;
-
-const router: Router = Router();
 
 module.exports.CreateUser = (req: request, res: Response) => {
     const { name, email, password } = req.body;
