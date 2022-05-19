@@ -7,8 +7,11 @@ export interface IUser extends Document {
     email: string;
     password: string;
     name: string;
-    findUserByCredentials?: () => AuthError | IUser
 }
+
+// interface IUserMethod extends Model<IUser> {
+//     getUserByCredentials(): AuthError | IUser
+// }
 
 const userSchema: Schema = new Schema({
     name: {
@@ -34,21 +37,21 @@ const userSchema: Schema = new Schema({
     },
 });
 
-userSchema.statics.findUserByCredentials = function findUserByCredentials(email, password) {
-    return this.findOne({ email }).select('+password')
-        .then((user: IUser) => {
-            if (!user) {
-                return Promise.reject(new AuthError('invalid'));
-            }
-            return bcrypt.compare(password, user.password)
-                .then((matched: boolean) => {
-                    if (!matched) {
-                        return Promise.reject(new AuthError('invalid'));
-                    }
-                    return user;
-                });
-        });
-};
+// userSchema.statics.findUserByCredentials = function findUserByCredentials(email, password) {
+//     return this.findOne({ email }).select('+password')
+//         .then((user: IUser) => {
+//             if (!user) {
+//                 return Promise.reject(new AuthError('invalid'));
+//             }
+//             return bcrypt.compare(password, user.password)
+//                 .then((matched: boolean) => {
+//                     if (!matched) {
+//                         return Promise.reject(new AuthError('invalid'));
+//                     }
+//                     return user;
+//                 });
+//         });
+// };
 
 const User: Model<IUser> = model('User', userSchema);
 

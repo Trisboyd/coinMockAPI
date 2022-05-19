@@ -2,27 +2,22 @@ import bcrypt from 'bcryptjs';
 import { Router, Response } from 'express';
 import request from '../types/request';
 import jwt from 'jsonwebtoken';
-import { userInfo } from 'os';
 import User, { IUser } from '../models/user';
+import payload from '../types/payload';
 
+// errors______________________________________________________________
 const RequestError = require('../middleware/errors/requestError');
-// import { Request } from "express";
-// import Payload from "./Payload";
+const NotFoundError = require('../middleware/errors/notFoundError');
 
-// /**
-//  * Extended Express Request interface to pass Payload Object to the request. Used by the auth middleware to pass data to the request by token signing (jwt.sign) and token verification (jwt.verify).
-//  * @param userId:string
-//  */
-// type request = Request & Payload;
-
-// export default request;
+// dotenv variables______________________________
+const { NODE_ENV, JWT_SECRET } = process.env;
 
 const router: Router = Router();
 
 module.exports.CreateUser = (req: request, res: Response) => {
     const { name, email, password } = req.body;
     bcrypt.hash(password, 10)
-        .then((hash) => User.create({ name, email, password; hash }))
+        .then((hash) => User.create({ name, email, password: hash }))
         .then((user) => {
             if (!user) {
                 throw new RequestError('invalid');
@@ -36,7 +31,7 @@ module.exports.getCurrentUser = (req: request, res: Response) => {
     User.findById(req.userId)
         .then((user) => {
             if (!user) {
-                throw new NotFoundError('nouser');
+                throw new NotFoundError('no user');
             }
             else {
                 return res.send({ user })
@@ -45,23 +40,36 @@ module.exports.getCurrentUser = (req: request, res: Response) => {
         .catch(error => console.log(error));
 }
 
-module.exports.login = (req: request, res: Response) => {
+module.exports.login = async (req: request, res: Response) => {
     const { email, password } = req.body;
-    // this doesn't work yet
-    // return User.findUserByCredentials(email, password)
+    try {
+        let user = await User.findOne(email);
+
+        if (!user) {
+            return Promise.reject(new AuthError('invalid'));
+        }
+
+        const isMatch: boolean = await bcrypt.compare(password, user.password);
+
+        if (!isMatch) {
+            return Promise.reject(new AuthError('invalid'));
+        }
+
+        const payload: payload = {
+            userId: user.id
+        }
+
+        const token = jwt.sign(
+            payload,
+            NODE_ENV as string === 'production' ? JWT_SECRET as string : 'secret-key', { expiresIn: '7d' },
+            (err, token) => {
+                if (err) throw err;
+                res.json({ token });
+            }
+        );
+    }
+    catch (error) {
+        console.log(error)
+    }
 }
 
-//   module.exports.login = (req, res, next) => {
-//     const { email, password } = req.body;
-//     return User.findUserByCredentials(email, password)
-//       .then((user) => {
-//         if (!user) {
-//           throw new AuthError(invalid);
-//         } else {
-//           const token = jwt.sign({ _id: user._id },
-//             NODE_ENV === 'production' ? JWT_SECRET : 'secret-key', { expiresIn: '7d' });
-//           res.send({ token });
-//         }
-//       })
-//       .catch(next);
-//   };
