@@ -10,3 +10,15 @@ const helmet = require('helmet');
 require('dotenv').config();
 
 const app = express();
+
+// ROUTES_____________________________________ROUTES
+
+const usersRouter = require('./routes/user');
+const messageRouter = require('./routes/message');
+const auth = require('./middleware/auth');
+
+// _____________all following routes will require checking for authorization
+app.use(auth);
+
+app.use(usersRouter);
+app.use(messageRouter);

@@ -12,7 +12,7 @@ const NotFoundError = require('../middleware/errors/notFoundError');
 // ________________________________________dotenv variables
 const { NODE_ENV, JWT_SECRET } = process.env;
 
-module.exports.CreateUser = (req: request, res: Response) => {
+module.exports.createUser = (req: request, res: Response) => {
     const { name, email, password } = req.body;
     bcrypt.hash(password, 10)
         .then((hash) => User.create({ name, email, password: hash }))
@@ -57,7 +57,7 @@ module.exports.login = async (req: request, res: Response) => {
             userId: user.id
         }
 
-        const token = jwt.sign(
+        jwt.sign(
             payload,
             NODE_ENV as string === 'production' ? JWT_SECRET as string : 'secret-key', { expiresIn: '7d' },
             (err, token) => {
