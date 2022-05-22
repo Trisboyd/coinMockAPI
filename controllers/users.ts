@@ -12,7 +12,7 @@ const NotFoundError = require('../middleware/errors/notFoundError');
 // ________________________________________dotenv variables
 const { NODE_ENV, JWT_SECRET } = process.env;
 
-module.exports.createUser = (req: request, res: Response) => {
+module.exports.signup = (req: request, res: Response) => {
     const { name, email, password } = req.body;
     bcrypt.hash(password, 10)
         .then((hash) => User.create({ name, email, password: hash }))

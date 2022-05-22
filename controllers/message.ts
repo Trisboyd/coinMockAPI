@@ -3,7 +3,7 @@ import { Request, Response } from 'express';
 import Message from '../models/message';
 
 // ___________________________________________________________errors
-// const RequestError = require('../middleware/errors/requestError');
+const requestError = require('../middleware/errors/requestError');
 // const NotFoundError = require('../middleware/errors/notFoundError');
 // const ForbiddenError = require('../middleware/errors/forbiddenError');
 
@@ -22,9 +22,8 @@ module.exports.createMessage = (req: Request, res: Response) => {
     })
         .then((newMessage) => {
             if (!newMessage) {
-                throw new RequestError('Invalid Message Information');
+                throw new requestError('Invalid Message Information');
             }
             res.send({ newMessage });
         })
-
 }

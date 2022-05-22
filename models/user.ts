@@ -5,6 +5,7 @@ export interface IUser extends Document {
     email: string;
     password: string;
     name: string;
+    coins: [];
 }
 
 const userSchema: Schema = new Schema({
@@ -29,6 +30,11 @@ const userSchema: Schema = new Schema({
         type: String,
         select: false
     },
+    coins: {
+        required: true,
+        type: String,
+        default: [],
+    }
 });
 
 const User: Model<IUser> = model('User', userSchema);
