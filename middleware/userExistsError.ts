@@ -4,6 +4,7 @@ interface Error {
     statusCode: number;
     name: string;
     code: number;
+    message?: string
 }
 
 const errorHandler = (

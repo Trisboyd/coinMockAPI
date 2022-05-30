@@ -2,11 +2,11 @@
   "name": "coinapi",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "app.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "ts-node server.ts",
-    "dev": "nodemon source/server.ts",
+    "start": "ts-node app.ts",
+    "dev": "nodemon app.ts",
     "build": "rm -rf build/ && prettier --write source/ && tsc"
   },
   "author": "",

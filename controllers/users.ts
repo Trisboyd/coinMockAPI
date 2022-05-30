@@ -8,6 +8,7 @@ import payload from '../types/payload';
 // ______________________________________________________________errors
 const RequestError = require('../middleware/errors/requestError');
 const NotFoundError = require('../middleware/errors/notFoundError');
+const AuthError = require('../middleware/errors/authError');
 
 // ________________________________________dotenv variables
 const { NODE_ENV, JWT_SECRET } = process.env;
