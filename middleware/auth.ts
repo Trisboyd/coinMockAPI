@@ -13,7 +13,7 @@ const { NODE_ENV, JWT_SECRET } = process.env;
 const auth = (req: request, res: Response, next: NextFunction) => {
     const { authorization } = req.headers;
     if (!authorization || !authorization.startsWith('Bearer ')) {
-        return authError('authorization error')
+        return new authError('authorization error')
     }
 
     const token: string = authorization.replace('Bearer ', '');
@@ -22,7 +22,7 @@ const auth = (req: request, res: Response, next: NextFunction) => {
     try {
         payload = jwt.verify(token, NODE_ENV === 'production' ? JWT_SECRET : 'secret-key');
     } catch (err) {
-        return authError('authorization error')
+        return new authError('authorization error')
     }
 
     req.userId = payload.userId;

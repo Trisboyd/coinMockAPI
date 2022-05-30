@@ -17,25 +17,22 @@ const { MONGODB_URI } = process.env;
 //__connect to mongo database
 mongoose.connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true });
 
-// __Log requests and errors
-// const { requestLogger, errorLogger } = require('./middleware/logger');
-const { errorHandler } = require('./middleware/userExistsError');
-
-const { notFoundError } = require('./middleware/errors/notFoundError');
-
 // APP SETUP___________________________________APP SETUP
 const app = express();
 
+// Setup for app
+app.use(express.json());
+
+app.use(express.urlencoded({ extended: true }));
+
+app.use(helmet());
+
+// CORS
 app.use(cors());
 app.options('*', cors());
 
 // for proxy service Heroku
 app.set('trust proxy', 1);
-
-// Setup for app
-app.use(express.json());
-
-app.use(express.urlencoded());
 
 // testing function for server crash and pm2 restart
 app.get('/crash-test', () => {
@@ -43,6 +40,12 @@ app.get('/crash-test', () => {
         throw new Error('Server will crash now');
     }, 0);
 });
+
+// __Log requests and errors
+// const { requestLogger, errorLogger } = require('./middleware/logger');
+const { errorHandler } = require('./middleware/userExistsError');
+
+const { notFoundError } = require('./middleware/errors/notFoundError');
 
 // ROUTES__________________________________________________ROUTES
 
@@ -78,7 +81,7 @@ app.get('*', () => {
 // error handler for sending errors to the client produced by celebrate
 app.use(errors());
 
-app.use(errorHandler);
+// app.use(errorHandler);
 
 // listen for correct port
 app.listen(PORT, () => {
