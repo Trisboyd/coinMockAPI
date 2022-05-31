@@ -30,11 +30,9 @@ const userSchema: Schema = new Schema({
         type: String,
         select: false
     },
-    coins: {
-        required: true,
+    coins: [{
         type: String,
-        default: [],
-    }
+    }]
 });
 
 const User: Model<IUser> = model('User', userSchema);

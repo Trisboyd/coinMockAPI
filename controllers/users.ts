@@ -1,5 +1,5 @@
 import bcrypt from 'bcryptjs';
-import { Response } from 'express';
+import { NextFunction, Response } from 'express';
 import request from '../types/request';
 import jwt from 'jsonwebtoken';
 import User from '../models/user';
@@ -13,8 +13,9 @@ const AuthError = require('../middleware/errors/authError');
 // ________________________________________dotenv variables
 const { NODE_ENV, JWT_SECRET } = process.env;
 
-module.exports.signup = (req: request, res: Response) => {
+module.exports.signup = (req: request, res: Response, next: NextFunction) => {
     const { name, email, password } = req.body;
+    console.log(req.body);
     bcrypt.hash(password, 10)
         .then((hash) => User.create({ name, email, password: hash }))
         .then((user) => {
@@ -23,7 +24,7 @@ module.exports.signup = (req: request, res: Response) => {
             }
             res.send({ _id: user._id, email: user.email });
         })
-        .catch(error => console.log(error));
+        .catch(next);
 }
 
 module.exports.getCurrentUser = (req: request, res: Response) => {
