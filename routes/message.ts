@@ -1,8 +1,10 @@
 import { Router } from 'express';
 
-const { createMessage } = require('../controllers/message');
+const { createMessage, getMessages } = require('../controllers/message');
 
 const router: Router = Router();
+
+router.get('/messages', getMessages);
 
 router.post('/messages', createMessage);
 

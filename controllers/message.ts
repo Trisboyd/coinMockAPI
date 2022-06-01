@@ -7,8 +7,6 @@ const requestError = require('../middleware/errors/requestError');
 // const NotFoundError = require('../middleware/errors/notFoundError');
 // const ForbiddenError = require('../middleware/errors/forbiddenError');
 
-const { NODE_ENV, JWT_SECRET } = process.env;
-
 module.exports.getMessages = (req: Request, res: Response) => {
     Message.find({})
         .then((messages) => res.send({ messages }))

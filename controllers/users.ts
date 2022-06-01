@@ -43,11 +43,13 @@ module.exports.getCurrentUser = (req: request, res: Response) => {
 module.exports.login = async (req: request, res: Response) => {
     const { email, password } = req.body;
     try {
-        let user = await User.findOne(email);
+        let user = await User.findOne({ email }).select('+password');
 
         if (!user) {
             return Promise.reject(new AuthError('invalid'));
         }
+
+        console.log(user);
 
         const isMatch: boolean = await bcrypt.compare(password, user.password);
 
